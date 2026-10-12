@@ -39,6 +39,24 @@ Everything here was learned by driving the pages with Claude in Chrome. LinkedIn
 ### Do not open the composer to "look" without a plan
 - Opening the composer and closing it with no text typed does not save anything. Do not type, and do not click Post.
 
+### Withdrawing an invitation
+- Each row has a "Withdraw" link whose accessible name is `Withdraw invitation sent to <name>`. Find it by that name and click it by reference.
+- A dialog appears: "If you withdraw now, you won't be able to resend to this person for up to 3 weeks." Its confirm button's accessible name again contains the person's name. Check it before clicking.
+- The dialog sometimes takes a few seconds to render (a progress bar first). Wait, then look again.
+- After the click the row disappears and "People (N)" drops by one on reload.
+- Because the list is virtualised, a reload resets scrolling: scroll to the bottom again before looking for old entries.
+
+### Messaging people
+- Only 1st-degree connections can be messaged without Premium. The people-search result shows "1st" and a Message button for them.
+- Search with `network=%5B%22F%22%5D` to restrict results to 1st-degree connections.
+
+### Article manager
+- The Drafts / Scheduled / Published dialog loads slowly and the Scheduled tab can show the previous tab's list for a moment. Wait a few seconds and re-read before concluding.
+- A draft's menu has Delete, Edit and Duplicate as draft. Delete asks for a second confirmation ("You can't undo this action").
+
+### Permission systems
+- Claude Code's Auto mode can refuse browser actions that lead to sending messages as a real-world transaction. Chat approval does not lift it. See the SKILL.md section on this.
+
 ### Sign-in
 - A redirect to `/uas/login` means that Chrome profile is not signed in. Stop and ask the user to sign in themselves or choose another profile.
 

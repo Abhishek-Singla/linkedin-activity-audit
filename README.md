@@ -45,20 +45,42 @@ Ask Claude something like:
 
 > Audit my LinkedIn activity: pending invitations, recent connections, messages I sent, and any posts, articles, drafts or scheduled posts.
 
-Optional follow-ups it can do when you ask:
+Follow-ups it can do when you ask (each one needs your explicit go-ahead, and it shows the exact targets first):
 
-- Propose invitations older than a threshold to withdraw, and withdraw them after you confirm the list.
-- Delete a stray draft after you confirm it.
-- Check a named list of people for pending / connected / neither.
+- **Withdraw stale invitations:** propose the pending invitations older than a threshold you choose, then withdraw them one at a time after you confirm the list. LinkedIn blocks re-inviting a withdrawn person for up to 3 weeks.
+- **Delete a stray draft:** for example a leftover article draft, then confirm the published article is still there.
+- **Send a batch of referral DMs** to 1st-degree connections you approve (or let it choose one per company), with your exact text, and record each send in a tracker workbook.
+- **Check a named list** of people for pending / connected / neither.
+- **Keep your profile URL consistent** across resume and cover-letter `.docx` files with a dry-run-first script that backs up every file.
 
 ## What is inside
 
 ```
 skills/linkedin-activity-audit/
-  SKILL.md                         the skill
-  references/pages-and-gotchas.md  URLs and the quirks of each LinkedIn page
-  references/report-template.md    report structure
+  SKILL.md                              the skill
+  references/pages-and-gotchas.md       URLs and the quirks of each LinkedIn page
+  references/report-template.md         report structure
+  references/outreach-and-tracker.md    how to choose recipients, send, and track DMs
+  scripts/update_linkedin_url.py        replace a profile URL across .docx files (dry-run by default)
 ```
+
+### URL update script
+
+```bash
+# dry run: lists files that contain the old URL, changes nothing
+python skills/linkedin-activity-audit/scripts/update_linkedin_url.py \
+  --root "/path/to/resumes" --old linkedin.com/in/old-slug --new linkedin.com/in/new-slug
+
+# apply: backs up each file first, edits text and hyperlinks, verifies, then swaps in
+python skills/linkedin-activity-audit/scripts/update_linkedin_url.py \
+  --root "/path/to/resumes" --old linkedin.com/in/old-slug --new linkedin.com/in/new-slug --apply
+```
+
+PDFs are not edited; re-export them from the updated `.docx` files.
+
+## Permissions
+
+Sending messages or withdrawing invitations changes your real account. Some Claude Code permission modes (for example Auto) refuse the browser steps that lead to sending a message, even if you said yes in chat. If that happens, switch the session to a mode where you approve each action (for example Manual), or start a new session in that mode. The skill will not change the permission mode itself.
 
 ## Notes and limits
 

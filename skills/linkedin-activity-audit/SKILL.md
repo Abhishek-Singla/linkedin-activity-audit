@@ -1,6 +1,6 @@
 ---
 name: linkedin-activity-audit
-description: Audit what has been done on a LinkedIn account - sent connection requests (pending), recent connections, sent messages, published posts, articles, drafts and scheduled posts - by reading LinkedIn through Claude in Chrome, and produce a dated report. Read-only by default. Use when the user asks "what have I done on LinkedIn", "check my pending invitations", "do I have scheduled posts or drafts", "did my connection requests get accepted", or wants a clean-up list of stale invitations or stray drafts.
+description: Audit what has been done on a LinkedIn account - sent connection requests (pending), recent connections, sent messages, published posts, articles, drafts and scheduled posts - by reading LinkedIn through Claude in Chrome, and produce a dated report. Read-only by default. Also does user-approved follow-ups - withdraw stale pending invitations, delete a stray article draft, send a user-approved batch of referral DMs to 1st-degree connections with a tracker sheet, and keep the LinkedIn profile URL consistent across resume files. Use when the user asks "what have I done on LinkedIn", "check my pending invitations", "do I have scheduled posts or drafts", "did my connection requests get accepted", "withdraw old invitations", "send these messages to my connections", or "fix my LinkedIn URL in my resumes".
 ---
 
 # LinkedIn activity audit
@@ -53,9 +53,35 @@ Articles are separate from posts. A profile with "Nothing to see for now" under 
 
 ## Optional follow-ups (only when asked)
 
-- **Stale invitation clean-up:** propose a list of pending invitations older than a threshold the user chooses (3 months is common). Withdraw only after the user confirms the list.
-- **Stray draft removal:** open the draft's menu, choose Delete, confirm LinkedIn's dialog, then re-check the Published tab to confirm the published article is untouched.
-- **Acceptance check for a named list:** for each name, report whether they are still pending, in recent connections, or neither (accepted earlier or lapsed). Do not infer more than the pages show.
+Each of these changes something real. Do them only on the user's explicit request in this conversation, show the exact targets first, and report the result against a before/after count.
+
+### Withdraw stale pending invitations
+1. Agree the threshold in the user's words. LinkedIn's "Sent 3 months ago" label is a rounded bucket, so state whether "older than 3 months" includes the "3 months ago" bucket and get that confirmed. Do not guess.
+2. List the exact names that will be withdrawn and the count that will remain.
+3. Withdraw one at a time. Click the person's Withdraw link by element reference (find "Withdraw invitation sent to <name>"), then locate the dialog's confirm button and check that its label names the same person before clicking it. Never click by coordinates for the confirm step.
+4. LinkedIn warns that a withdrawn person cannot be re-invited for up to 3 weeks. Tell the user this before you start.
+5. Reload the sent page and compare "People (N)" with the expected count.
+6. If a tab freezes or a call times out, wait and check the page state (or the People count) before repeating any click. A timed-out click may or may not have landed.
+
+### Delete a stray article draft
+Open the draft's menu in the article manager, choose Delete, confirm LinkedIn's "can't undo" dialog, then re-open the Published tab to confirm the published article is still there. A draft with the same title as a published article and an empty body is a leftover copy, but still confirm with the user before deleting.
+
+### Send a user-approved batch of DMs
+See `references/outreach-and-tracker.md`. Short version: only 1st-degree connections can be messaged without Premium; the user must explicitly authorise sending and either name the recipients or delegate the choice; list the chosen recipients before the first send; send the approved text unchanged with the first name substituted; record each send in the tracker.
+
+### Acceptance check for a named list
+For each name, report whether they are still pending, in recent connections, or neither (accepted earlier or lapsed). Do not infer more than the pages show.
+
+### Keep the profile URL consistent across resume files
+Use `scripts/update_linkedin_url.py`. It is dry-run by default, takes the old and new URL and a folder, backs up every file before changing it, edits both visible text and hyperlink targets in .docx files, verifies the result, and reports any file where the URL is split across text runs. Confirm with the user which URL is the live one (the profile's "Public profile and URL" setting) before running it with `--apply`. PDFs are not edited; re-export them from the updated .docx files if the user wants.
+
+## If the permission system blocks the sending step
+
+Some Claude Code permission modes classify "send a message in the user's name" as a real-world transaction and refuse the browser calls that lead to it, even when the user said yes in chat. Do not retry in a loop or look for another tool to reach the same page. Tell the user plainly:
+- chat approval does not change the permission mode; only the user can switch the session mode (for example from Auto to Manual so each action prompts), and
+- a session that started in the blocking mode may need to be restarted, in which case give them a self-contained prompt to paste into a new session.
+
+Never switch the session's own permission mode yourself.
 
 ## Report requirements
 
