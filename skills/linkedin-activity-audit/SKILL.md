@@ -73,7 +73,7 @@ See `references/outreach-and-tracker.md`. Short version: only 1st-degree connect
 For each name, report whether they are still pending, in recent connections, or neither (accepted earlier or lapsed). Do not infer more than the pages show.
 
 ### Keep the profile URL consistent across resume files
-Use `scripts/update_linkedin_url.py`. It is dry-run by default, takes the old and new URL and a folder, backs up every file before changing it, edits both visible text and hyperlink targets in .docx files, verifies the result, and reports any file where the URL is split across text runs. Confirm with the user which URL is the live one (the profile's "Public profile and URL" setting) before running it with `--apply`. PDFs are not edited; re-export them from the updated .docx files if the user wants.
+Use `scripts/update_linkedin_url.py`. It is dry-run by default, takes the old and new URL and a folder, backs up every file before changing it, edits both visible text and hyperlink targets in .docx files, verifies the result, and reports any file where the URL is split across text runs. Confirm with the user which URL is the live one (the profile's "Public profile and URL" setting) before running it with `--apply`. The script does not touch PDFs. To refresh them, use `scripts/reexport_docx_to_pdf.ps1` (Windows + Word + Python/pypdf): dry-run by default, backs up each PDF, exports from the updated .docx, and keeps the original if the page count changed or the expected URL is missing. Expect most PDFs to have no same-name .docx; list those for the user rather than guessing a source, and do not patch PDF text in place.
 
 ## If the permission system blocks the sending step
 

@@ -62,6 +62,7 @@ skills/linkedin-activity-audit/
   references/report-template.md         report structure
   references/outreach-and-tracker.md    how to choose recipients, send, and track DMs
   scripts/update_linkedin_url.py        replace a profile URL across .docx files (dry-run by default)
+  scripts/reexport_docx_to_pdf.ps1      re-export PDFs from updated .docx files with Word (dry-run by default)
 ```
 
 ### URL update script
@@ -76,7 +77,14 @@ python skills/linkedin-activity-audit/scripts/update_linkedin_url.py \
   --root "/path/to/resumes" --old linkedin.com/in/old-slug --new linkedin.com/in/new-slug --apply
 ```
 
-PDFs are not edited; re-export them from the updated `.docx` files.
+PDFs are not edited by that script. Refresh them with the Word-based exporter (Windows, Word and Python with `pypdf`). It is a dry run unless you pass `-Apply`, backs up every PDF, and keeps the original if the page count changes or the expected text is missing:
+
+```powershell
+.\skills\linkedin-activity-audit\scripts\reexport_docx_to_pdf.ps1 `
+  -Root "C:\Resumes" -BackupDir "C:\Resumes\_backup_pdf" -ExpectText "new-slug" -Apply
+```
+
+Only PDFs that have a same-name `.docx` can be re-exported this way.
 
 ## Permissions
 
