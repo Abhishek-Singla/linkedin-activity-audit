@@ -86,6 +86,10 @@ PDFs are not edited by that script. Refresh them with the Word-based exporter (W
 
 Only PDFs that have a same-name `.docx` can be re-exported this way.
 
+## Audit log
+
+`docs/session-audit-2026-10-12.md` is an anonymised record of one working session: the actions taken, how each was verified, and the lessons that went into the skill.
+
 ## Permissions
 
 Sending messages or withdrawing invitations changes your real account. Some Claude Code permission modes (for example Auto) refuse the browser steps that lead to sending a message, even if you said yes in chat. If that happens, switch the session to a mode where you approve each action (for example Manual), or start a new session in that mode. The skill will not change the permission mode itself.
